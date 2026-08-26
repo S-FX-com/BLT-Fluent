@@ -34,6 +34,8 @@ rsync -a \
 	--exclude 'bin' \
 	--exclude 'build' \
 	--exclude 'docs' \
+	--exclude 'tests' \
+	--exclude 'CLAUDE.md' \
 	--exclude 'composer.json' \
 	--exclude 'composer.lock' \
 	--exclude 'README.md' \

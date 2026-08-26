@@ -4,7 +4,7 @@ Tags: fluentcart, fluentcrm, checkout, custom fields, membership
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,11 @@ Never. Deleting removes this plugin's own configuration, and only if "Delete BLT
 No. Renewal orders skip the fields by default; the behaviour is a toggle on the Advanced tab.
 
 == Changelog ==
+
+= 0.1.1 =
+* Added a GitHub Actions release workflow: pushes to `main` build the distributable zip and publish a GitHub release tagged from the `Version` header (skipped if that tag already exists).
+* Excluded `tests/` and `CLAUDE.md` from the built zip.
+* Added `CLAUDE.md` documenting the versioning and release conventions.
 
 = 0.1.0 =
 * First build: dependency guards, daily update check, checkout capture with validation, field picker with drag-and-drop ordering, per-product field sets, pre-fill, renewal skip and diagnostics.

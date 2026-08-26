@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(grep -m1 -E '^\s*\*\s*Version:' blt-fluent.php | sed -E 's/.*Version:[[:space:]]*//')"
+          if [[ -z "$version" ]]; then
+            echo "Could not read the Version header from blt-fluent.php" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check for an existing release
+        id: check
+        run: |
+          if git rev-parse "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up PHP
+        if: steps.check.outputs.exists == 'false'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Smoke tests
+        if: steps.check.outputs.exists == 'false'
+        run: php tests/smoke-test.php
+
+      - name: Install Plugin Update Checker
+        if: steps.check.outputs.exists == 'false'
+        run: bin/install-puc.sh
+
+      - name: Build zip
+        if: steps.check.outputs.exists == 'false'
+        run: bin/build-zip.sh
+
+      - name: Create release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            "build/blt-fluent-${{ steps.version.outputs.version }}.zip" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes
