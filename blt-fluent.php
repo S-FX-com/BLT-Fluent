@@ -3,7 +3,7 @@
  * Plugin Name:       BLT Fluent
  * Plugin URI:        https://github.com/s-fx-com/blt-fluent
  * Description:       Collect FluentCRM custom contact fields during FluentCart checkout and write them straight to the contact record. FluentCRM stays the single source of truth.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  fluent-cart, fluent-crm
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BLT_FLUENT_VERSION', '0.1.0' );
+define( 'BLT_FLUENT_VERSION', '0.1.1' );
 define( 'BLT_FLUENT_FILE', __FILE__ );
 define( 'BLT_FLUENT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLT_FLUENT_URL', plugin_dir_url( __FILE__ ) );
