@@ -1,0 +1,53 @@
+/* BLT Fluent — checkout fields.
+   Deliberately minimal: inherit the theme's checkout styling rather than
+   fighting it. Spacing only, no colours or typography. */
+
+.blt-fluent-fields {
+	margin: 1.5em 0;
+}
+
+.blt-fluent-fields__title {
+	margin: 0 0 0.25em;
+}
+
+.blt-fluent-fields__description {
+	margin: 0 0 1em;
+}
+
+.blt-fluent-field {
+	margin-bottom: 1em;
+}
+
+.blt-fluent-field__label {
+	display: block;
+	margin-bottom: 0.25em;
+	font-weight: 600;
+}
+
+.blt-fluent-field__input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.blt-fluent-field__choices {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25em;
+}
+
+.blt-fluent-field__choice {
+	display: flex;
+	align-items: center;
+	gap: 0.4em;
+	font-weight: 400;
+}
+
+.blt-fluent-field__help {
+	margin: 0.25em 0 0;
+	font-size: 0.875em;
+	opacity: 0.8;
+}
+
+.blt-fluent-field__required {
+	color: #b32d2e;
+}

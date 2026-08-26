@@ -1,0 +1,13 @@
+# Composer / third-party libraries are installed, not committed.
+/vendor/
+composer.lock
+
+# Build output
+/build/
+*.zip
+
+# Editors and OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp

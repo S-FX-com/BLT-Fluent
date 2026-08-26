@@ -1,0 +1,14 @@
+{
+	"name": "s-fx-com/blt-fluent",
+	"description": "Collect FluentCRM custom contact fields during FluentCart checkout.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=7.4",
+		"yahnis-elsts/plugin-update-checker": "^5.6"
+	},
+	"config": {
+		"vendor-dir": "vendor",
+		"optimize-autoloader": true
+	}
+}
