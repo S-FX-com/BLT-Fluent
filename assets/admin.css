@@ -1,0 +1,69 @@
+/* BLT Fluent — settings screen. */
+
+.blt-fluent-wrap .nav-tab-wrapper {
+	margin-bottom: 1em;
+}
+
+.blt-fluent-setbar {
+	margin: 1em 0;
+}
+
+.blt-fluent-fields-table {
+	margin-top: 0.5em;
+}
+
+.blt-fluent-fields-table td,
+.blt-fluent-fields-table th {
+	vertical-align: middle;
+}
+
+.blt-fluent-col-handle {
+	width: 32px;
+	text-align: center;
+}
+
+.blt-fluent-col-include {
+	width: 70px;
+	text-align: center;
+}
+
+.blt-fluent-handle {
+	cursor: move;
+	color: #8c8f94;
+}
+
+.blt-fluent-handle:hover {
+	color: #1d2327;
+}
+
+.blt-fluent-row--off {
+	opacity: 0.55;
+}
+
+.blt-fluent-row-placeholder td {
+	height: 46px;
+	background: #f0f6fc;
+}
+
+.blt-fluent-type {
+	display: inline-block;
+	padding: 1px 6px;
+	border-radius: 3px;
+	background: #f0f0f1;
+	color: #50575e;
+	font-size: 11px;
+}
+
+.blt-fluent-orphan {
+	display: inline-block;
+	padding: 1px 6px;
+	border-radius: 3px;
+	background: #fcf0f1;
+	color: #b32d2e;
+	font-size: 11px;
+}
+
+.blt-fluent-inline-form {
+	display: inline-block;
+	margin-right: 0.5em;
+}
