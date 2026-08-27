@@ -1,0 +1,126 @@
+/* BLT Fluent — company selection.
+   Spacing and the dropdown's mechanics only; colours stay close to the theme
+   so the block does not fight whatever it is dropped into. */
+
+.blt-company {
+	margin: 1.5em 0;
+	max-width: 32em;
+}
+
+.blt-company__current {
+	margin: 0 0 0.75em;
+}
+
+.blt-company__current-label {
+	opacity: 0.75;
+}
+
+.blt-company__label {
+	display: block;
+	margin-bottom: 0.25em;
+	font-weight: 600;
+}
+
+.blt-company__combo {
+	position: relative;
+}
+
+.blt-company__input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.blt-company__list {
+	position: absolute;
+	z-index: 20;
+	left: 0;
+	right: 0;
+	margin: 2px 0 0;
+	padding: 0;
+	list-style: none;
+	max-height: 16em;
+	overflow-y: auto;
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 3px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.blt-company__list[hidden] {
+	display: none;
+}
+
+.blt-company__option,
+.blt-company__empty {
+	display: block;
+	padding: 0.5em 0.75em;
+	color: #1d2327;
+	cursor: pointer;
+}
+
+.blt-company__empty {
+	cursor: default;
+	opacity: 0.7;
+}
+
+.blt-company__option:hover,
+.blt-company__option.is-active {
+	background: #f0f6fc;
+}
+
+.blt-company__option--create {
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	font-weight: 600;
+}
+
+.blt-company__option-name {
+	display: block;
+}
+
+.blt-company__option-meta {
+	display: block;
+	font-size: 0.85em;
+	opacity: 0.7;
+}
+
+.blt-company__actions {
+	display: flex;
+	align-items: center;
+	gap: 0.75em;
+	margin-top: 0.75em;
+}
+
+.blt-company__save[disabled] {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.blt-company__status {
+	font-size: 0.9em;
+}
+
+.blt-company__status.is-error {
+	color: #b32d2e;
+}
+
+.blt-company__help {
+	margin: 0.25em 0 0;
+	font-size: 0.9em;
+	opacity: 0.8;
+}
+
+@media (prefers-color-scheme: dark) {
+	.blt-company__list {
+		background: #1d2327;
+		border-color: rgba(255, 255, 255, 0.2);
+	}
+
+	.blt-company__option {
+		color: #f0f0f1;
+	}
+
+	.blt-company__option:hover,
+	.blt-company__option.is-active {
+		background: #2c3338;
+	}
+}

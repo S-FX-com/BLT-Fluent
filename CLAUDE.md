@@ -29,10 +29,12 @@ installed sites.
 
 ## Tests
 
-`php tests/smoke-test.php` — a small WordPress shim plus a stubbed FluentCRM
-reader, no live FluentCart/FluentCRM needed. Run it (and `php -l` on changed
-files) before committing. CI (`.github/workflows/ci.yml`) runs the same thing
-on PHP 7.4, 8.2 and 8.4.
+`php tests/smoke-test.php` and `php tests/company-test.php` — a small WordPress
+shim (`tests/bootstrap.php`, which also holds the shared `check()` /
+`call_private()` / `blt_test_report()` helpers) plus stubbed FluentCRM readers,
+so no live FluentCart/FluentCRM is needed. Run both (and `php -l` on changed
+files) before committing. CI (`.github/workflows/ci.yml`) runs the same two
+files on PHP 7.4, 8.2 and 8.4.
 
 ## Verifying spec assumptions
 

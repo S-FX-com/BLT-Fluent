@@ -4,7 +4,7 @@ Tags: fluentcart, fluentcrm, checkout, custom fields, membership
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,8 @@ Collect FluentCRM custom contact fields during FluentCart checkout and write the
 BLT Fluent lets an administrator select which FluentCRM custom contact fields are collected during FluentCart checkout, order them by drag-and-drop, and enable that field set per product.
 
 On submission the values are written directly to the customer's FluentCRM contact record. FluentCRM remains the single source of truth for member profile data: no ACF bridge, no WordPress user meta duplication, no Fluent Forms dependency.
+
+The plugin also provides a company selection module: add `[blt_fluent_company]` to any page and a signed-in member can change the company on their contact record. Typing searches FluentCRM's existing companies so members pick a company that already exists; a name matching nothing offers to add it.
 
 Design principles:
 
@@ -28,6 +30,7 @@ Design principles:
 2. Upload and activate BLT Fluent.
 3. Define your update token in wp-config.php if you use the private-repo updater: `define( 'BLT_FLUENT_GH_TOKEN', '...' );`
 4. Go to BLT Fluent, tick the FluentCRM fields to collect, drag them into order, then map the products that should ask for them on the Products tab.
+5. For company selection, add the `[blt_fluent_company]` shortcode to a members-only page.
 
 == Frequently Asked Questions ==
 
@@ -44,6 +47,11 @@ Never. Deleting removes this plugin's own configuration, and only if "Delete BLT
 No. Renewal orders skip the fields by default; the behaviour is a toggle on the Advanced tab.
 
 == Changelog ==
+
+= 0.2.0 =
+* New: company selection module. The `[blt_fluent_company]` shortcode lets a signed-in member change the company on their own FluentCRM contact, with predictive search over existing companies and an explicit "add a new company" step for genuinely new ones.
+* Members may only ever change their own contact: it is resolved from the signed-in user's email server-side, and no contact identifier is accepted from the request.
+* New companies are deduplicated against existing records by name, and creation is rate limited per member and can be switched off with the `blt_fluent/company_allow_create` filter.
 
 = 0.1.1 =
 * Added a GitHub Actions release workflow: pushes to `main` build the distributable zip and publish a GitHub release tagged from the `Version` header (skipped if that tag already exists).
