@@ -134,6 +134,73 @@ EPNET membership is a subscription and needs an account, so guest capture is a
 nice-to-have — but a failure here should not block checkout, and does not: every
 CRM call is wrapped and logged.
 
+## 9. Companies module: is it reachable?
+
+**Test.** Put `[blt_fluent_company]` on a members-only page and load it as a
+signed-in member with a FluentCRM contact.
+
+**Expected.** The picker renders with the member's current company.
+
+**If it says "Company selection is not available":** the model class was not
+found. `Companies::model()` looks for `\FluentCrm\App\Models\Company` and
+`...\Companies`; confirm the real class name on this FluentCRM version and add
+it there. The log records the same thing.
+
+## 10. Company search, creation and the contact relationship
+
+**Test.** Type three letters of a company you know exists — results should
+appear. Then pick one, Save, and confirm in FluentCRM that the contact now shows
+that company. Finally type a name that does not exist, use **+ Add a new
+company**, and confirm both that the company appears in FluentCRM's Companies
+list and that it is attached to the contact.
+
+**Expected.** All three work, and the Diagnostics log records which strategy
+each step used (`companies relation`, `company_id column`, `syncCompanies`,
+`attachCompanies`, …).
+
+**If search returns nothing** but companies exist, the name column differs.
+Override the search:
+
+```php
+add_filter( 'blt_fluent/pre_company_search', function ( $results, $term ) {
+	// Return an array of [ 'id' => 1, 'name' => 'Acme', 'meta' => '' ].
+}, 10, 2 );
+```
+
+**If creation fails**, the log carries FluentCRM's own message — usually a
+column that is required but absent from the payload. `Companies::create()` only
+sends columns the table actually has; add whatever else is mandatory:
+
+```php
+add_filter( 'blt_fluent/new_company_data', function ( $data, $name ) {
+	$data['owner_id'] = get_current_user_id();
+	return $data;
+}, 10, 2 );
+```
+
+**If the company saves but does not stick** — Save reports success and the
+contact still shows the old company — the write path and the read path disagree.
+The log's strategy line names the write that was used. Take over the assignment:
+
+```php
+add_filter( 'blt_fluent/pre_assign_company', function ( $handled, $contact, $company_id ) {
+	// Do the write, return true on success.
+	return true;
+}, 10, 3 );
+```
+
+## 11. One company per contact, or several?
+
+The module presents a single company per member and replaces on save. If this
+FluentCRM version models companies as many-to-many and the site wants members in
+several, short-circuit `blt_fluent/pre_assign_company` to attach without
+detaching, and `blt_fluent/company_search_results` is unaffected.
+
+**Worth confirming either way:** attach a member to two companies in FluentCRM's
+admin, then load the shortcode. It shows the first one. Saving replaces both
+with the chosen company — check that is what the site wants before rolling this
+out to members.
+
 ## Phase 0 exit criteria
 
 - [ ] Activation is blocked with either dependency inactive (try WP-CLI too).

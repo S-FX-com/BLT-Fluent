@@ -43,48 +43,6 @@ class Stub_CRM_Fields extends CRM_Fields {
 	}
 }
 
-$passed = 0;
-$failed = array();
-
-/**
- * Assert two values match.
- *
- * @param string $name     Test name.
- * @param mixed  $expected Expected value.
- * @param mixed  $actual   Actual value.
- * @return void
- */
-function check( $name, $expected, $actual ) {
-	global $passed, $failed;
-
-	if ( $expected === $actual ) {
-		++$passed;
-		return;
-	}
-
-	$failed[] = sprintf(
-		"%s\n    expected: %s\n    actual:   %s",
-		$name,
-		var_export( $expected, true ),
-		var_export( $actual, true )
-	);
-}
-
-/**
- * Call a private/protected method.
- *
- * @param object $object Instance.
- * @param string $method Method name.
- * @param array  $args   Arguments.
- * @return mixed
- */
-function call_private( $object, $method, array $args = array() ) {
-	$reflection = new ReflectionMethod( $object, $method );
-	$reflection->setAccessible( true );
-
-	return $reflection->invokeArgs( $object, $args );
-}
-
 // --- Field type mapping ---------------------------------------------------
 
 check( 'canonical_type: single line text', CRM_Fields::TYPE_TEXT, CRM_Fields::canonical_type( 'text' ) );
@@ -512,10 +470,4 @@ check( 'render: hostile option value escaped', false, strpos( $escaped_html, '">
 
 // --- Report ---------------------------------------------------------------
 
-echo sprintf( "%d passed, %d failed\n", $passed, count( $failed ) );
-
-foreach ( $failed as $failure ) {
-	echo "FAIL: " . $failure . "\n";
-}
-
-exit( empty( $failed ) ? 0 : 1 );
+blt_test_report();

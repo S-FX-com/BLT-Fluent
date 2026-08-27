@@ -28,3 +28,6 @@ jobs:
 
       - name: Smoke tests
         run: php tests/smoke-test.php
+
+      - name: Company module tests
+        run: php tests/company-test.php

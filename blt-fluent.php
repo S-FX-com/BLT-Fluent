@@ -3,7 +3,7 @@
  * Plugin Name:       BLT Fluent
  * Plugin URI:        https://github.com/s-fx-com/blt-fluent
  * Description:       Collect FluentCRM custom contact fields during FluentCart checkout and write them straight to the contact record. FluentCRM stays the single source of truth.
- * Version:           0.1.1
+ * Version:           0.2.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  fluent-cart, fluent-crm
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BLT_FLUENT_VERSION', '0.1.1' );
+define( 'BLT_FLUENT_VERSION', '0.2.0' );
 define( 'BLT_FLUENT_FILE', __FILE__ );
 define( 'BLT_FLUENT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLT_FLUENT_URL', plugin_dir_url( __FILE__ ) );
@@ -36,6 +36,8 @@ require_once BLT_FLUENT_DIR . 'includes/class-settings.php';
 require_once BLT_FLUENT_DIR . 'includes/class-crm-fields.php';
 require_once BLT_FLUENT_DIR . 'includes/class-cart-context.php';
 require_once BLT_FLUENT_DIR . 'includes/class-checkout.php';
+require_once BLT_FLUENT_DIR . 'includes/class-companies.php';
+require_once BLT_FLUENT_DIR . 'includes/class-company-shortcode.php';
 require_once BLT_FLUENT_DIR . 'includes/class-updater.php';
 require_once BLT_FLUENT_DIR . 'includes/class-admin.php';
 require_once BLT_FLUENT_DIR . 'includes/class-plugin.php';
@@ -140,7 +142,13 @@ add_action(
 	function () {
 		if ( ! empty( blt_fluent_missing_dependencies() ) ) {
 			add_action( 'admin_notices', 'blt_fluent_dependency_notice' );
-			return; // Register nothing else. Config in wp_options is preserved.
+
+			// Register nothing else. Config in wp_options is preserved. The one
+			// exception is the company shortcode, which is registered as a no-op
+			// so a member-facing page shows nothing rather than raw shortcode text.
+			\BLT_Fluent\Company_Shortcode::register_fallback();
+
+			return;
 		}
 
 		blt_fluent_boot();

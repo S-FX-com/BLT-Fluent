@@ -60,6 +60,20 @@ final class Plugin {
 	private $checkout;
 
 	/**
+	 * FluentCRM companies service.
+	 *
+	 * @var Companies
+	 */
+	private $companies;
+
+	/**
+	 * Company selection shortcode.
+	 *
+	 * @var Company_Shortcode
+	 */
+	private $company_shortcode;
+
+	/**
 	 * Admin screen.
 	 *
 	 * @var Admin|null
@@ -105,6 +119,11 @@ final class Plugin {
 		$this->checkout = new Checkout( $this->settings, $this->crm_fields );
 		$this->checkout->boot();
 
+		$this->companies = new Companies();
+
+		$this->company_shortcode = new Company_Shortcode( $this->crm_fields, $this->companies );
+		$this->company_shortcode->boot();
+
 		if ( is_admin() ) {
 			$this->admin = new Admin( $this->settings, $this->crm_fields );
 			$this->admin->boot();
@@ -146,6 +165,19 @@ final class Plugin {
 	 */
 	public function checkout() {
 		return $this->checkout;
+	}
+
+	/**
+	 * FluentCRM companies service.
+	 *
+	 * @return Companies
+	 */
+	public function companies() {
+		if ( ! $this->companies ) {
+			$this->companies = new Companies();
+		}
+
+		return $this->companies;
 	}
 
 	/**

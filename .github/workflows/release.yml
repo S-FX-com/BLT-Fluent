@@ -42,7 +42,9 @@ jobs:
 
       - name: Smoke tests
         if: steps.check.outputs.exists == 'false'
-        run: php tests/smoke-test.php
+        run: |
+          php tests/smoke-test.php
+          php tests/company-test.php
 
       - name: Install Plugin Update Checker
         if: steps.check.outputs.exists == 'false'

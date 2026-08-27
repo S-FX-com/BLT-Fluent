@@ -68,6 +68,49 @@ The uninstall opt-in covers this plugin's configuration only. FluentCRM contacts
 field definitions and values, FluentCart orders and products, and anything written
 by the profile-edit form are never deleted.
 
+## Company selection
+
+`[blt_fluent_company]` renders a company picker for the signed-in member. Typing
+searches FluentCRM's existing companies; picking one and pressing Save writes it
+to that member's contact record. A name matching nothing offers **+ Add a new
+company**, so members land on an existing record wherever one exists and only
+create a company deliberately.
+
+| Attribute | Default | Purpose |
+|---|---|---|
+| `label` | Company | Field label |
+| `placeholder` | Start typing your company name… | Input placeholder |
+| `button` | Save | Save button text |
+| `help` | *(none)* | Help text under the field |
+| `allow_create` | `yes` | Whether the "add a new company" option appears |
+| `min_chars` | `2` | Characters before searching |
+
+`allow_create` controls the interface only. The enforcement point is the
+`blt_fluent/company_allow_create` filter, because an attribute cannot be trusted
+to survive the round trip to the REST endpoint:
+
+```php
+add_filter( 'blt_fluent/company_allow_create', '__return_false' );
+```
+
+**Whose record gets written.** The contact is resolved server-side from the
+signed-in user's email. No contact identifier is accepted from the request, so a
+member can only ever change their own company. Both endpoints require a signed-in
+user, and REST cookie authentication additionally requires the `wp_rest` nonce
+the script sends.
+
+**Duplicate companies.** A submitted name is matched case-insensitively against
+existing companies before anything is created, so "acme ltd" attaches to the
+existing "Acme Ltd". Creation is also rate limited per member (5 an hour by
+default, `blt_fluent/company_create_limit`).
+
+REST endpoints, namespace `blt-fluent/v1`:
+
+| Route | Method | Purpose |
+|---|---|---|
+| `/companies?q=` | GET | Search companies by name |
+| `/company` | POST | Set the member's company (`company_id` or `company_name`) |
+
 ## FluentCart hooks used
 
 | Stage | Hook | Type |
@@ -103,21 +146,30 @@ change:
 | `blt_fluent/order_meta_payload` | Adjust or skip the order-meta audit trail |
 | `blt_fluent/crm_field_definitions` | Adjust the FluentCRM field definitions |
 | `blt_fluent/capability` | Capability required to manage the plugin |
+| `blt_fluent/company_shortcode_tag` | Rename the shortcode |
+| `blt_fluent/company_allow_create` | Whether members may create companies |
+| `blt_fluent/company_create_limit` | Companies one member may create per hour |
+| `blt_fluent/company_contact_email` | Email used to find the member's contact |
+| `blt_fluent/pre_company_search`, `blt_fluent/company_search_results` | Override company search |
+| `blt_fluent/pre_create_company`, `blt_fluent/new_company_data` | Override company creation |
+| `blt_fluent/pre_assign_company` | Override attaching a company to a contact |
+| `blt_fluent/company_logged_out_message`, `blt_fluent/company_no_contact_message` | Front-end messages |
 | `blt_fluent/github_url`, `blt_fluent/github_branch`, `blt_fluent/github_token` | Updater source |
 
 Actions: `blt_fluent/booted`, `blt_fluent/after_render`, `blt_fluent/values_written`,
-`blt_fluent/captured`.
+`blt_fluent/captured`, `blt_fluent/company_created`, `blt_fluent/company_saved`.
 
 ## Tests
 
 ```bash
 php tests/smoke-test.php
+php tests/company-test.php
 ```
 
 `tests/bootstrap.php` is a small WordPress shim — enough of the API for the
 sanitisation, normalisation, validation and render code to run from the CLI. The
-FluentCRM reader is swapped for a stub, so the tests never need FluentCart or
-FluentCRM installed. CI runs the same script plus `php -l` on 7.4, 8.2 and 8.4.
+FluentCRM readers are swapped for stubs, so the tests never need FluentCart or
+FluentCRM installed. CI runs both files plus `php -l` on 7.4, 8.2 and 8.4.
 
 ## Build status
 
@@ -129,6 +181,7 @@ FluentCRM installed. CI runs the same script plus `php -l` on 7.4, 8.2 and 8.4.
 | 3 | Config layer (picker, ordering, product map) | Built |
 | 4 | Pre-fill + renewal skip | Built |
 | 5 | Hardening (multi-value, orphans, modal, i18n) | Built — items 1, 4, 5 in `docs/VERIFY.md` need a live install |
+| — | Company selection shortcode | Built — items 9-11 in `docs/VERIFY.md` need a live install |
 
 `docs/VERIFY.md` lists the assumptions that can only be settled against
 equinephotographers.org, each with the filter that fixes it if the assumption
